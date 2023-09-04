@@ -1,0 +1,98 @@
+---
+title: "Relatório de Saneamento de Ilhabela 2022"
+output: 
+  
+  flexdashboard::flex_dashboard:
+    theme: yeti
+    orientation: columns
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(tidyverse)
+```
+
+```{r global, include=FALSE}
+load("ilhabela_doencas.rda")
+ilhabela_tratado <- ilhabela_doencas |> 
+  mutate(
+    ESPEC = case_when(
+      ESPEC == "03" ~ "Clinica",
+      ESPEC == "07" ~ "Pediatria",
+      ESPEC == "09" ~ "Cirurgia"
+    ),
+    SEXO = case_when(
+      SEXO == "3" ~ "Feminino",
+      SEXO == "1" ~ "Masculino"
+    ),
+    RACA_COR = case_when(
+      RACA_COR == "01" ~ "Branca",
+      RACA_COR == "99" ~ "Não declarado",
+      RACA_COR == "02" ~ "Preta",
+      RACA_COR == "03" ~ "Parda",
+      RACA_COR == "04" ~ "Amarela"
+    )
+  ) |> 
+  select(ESPEC, SEXO, RACA_COR, DIAG_PRINC, IDADE)
+```
+
+## Coluna {.sidebar}
+Filtrar internações de 2022 por especialidade, sexo ou cor:
+```{r}
+varSelectInput(
+  "ilhabela_col",
+  label = "Variáveis",
+  data = ilhabela_tratado |> 
+    select(ESPEC, SEXO, RACA_COR)
+)
+```
+
+
+## Coluna 2 {.tabset}
+
+### Casos
+```{r}
+renderPlot({
+    ggplot(ilhabela_tratado, aes(x = get(input$ilhabela_col), fill = get(input$ilhabela_col))) +
+      geom_bar() +
+      xlab("") +
+      ylab("") +
+      guides(fill = guide_legend(title = input$ilhabela_col))
+})
+```
+
+### Faixa etária
+
+```{r}
+renderPlot({
+  ggplot(ilhabela_tratado, aes(x = IDADE)) +
+    geom_histogram(aes(y = ..density..), color = "blue", fill = "lightblue") +
+    geom_density(alpha = .2, fill = "darkred") +
+    ylab("Proporção")
+})
+```
+
+
+## Coluna 2
+
+### Mulheres
+```{r}
+valueBox(5, caption = "Mulheres", icon = "fa-female")
+```
+
+### Homens
+```{r}
+valueBox(6, caption = "Homens", icon = "fa-male")
+```
+
+### Menores
+```{r}
+valueBox(7, caption = "Menores", icon = "fa-baby")
+```
+
+### Idosos
+```{r}
+valueBox(7, caption = "Menores", icon = "fa-person-cane")
+```

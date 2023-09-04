@@ -1,0 +1,120 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(microdatasus)
+```
+
+```{r}
+if(!file.exists("dados_2002.rda")){
+  df <- fetch_datasus(
+    year_start = 2022,
+    year_end = 2022,
+    month_start = 1,
+    month_end = 12,
+    uf = "SP",
+    information_system = "SIH-RD"
+  )
+  save(df,file = "dados_2002.rda")
+} else {
+  load("dados_2002.rda")
+}
+```
+
+```{r}
+df
+```
+
+```{r}
+df |> 
+  select(
+    MUNIC_RES,
+    ESPEC,
+    SEXO,
+    RACA_COR,
+    DIAG_PRINC,
+    MUNIC_MOV,
+    IDADE
+  )
+```
+
+```{r}
+ilhabela <- df |> 
+  select(
+    MUNIC_RES,
+    ESPEC,
+    SEXO,
+    RACA_COR,
+    DIAG_PRINC,
+    MUNIC_MOV,
+    IDADE
+  ) |> 
+  mutate(
+    MUNIC_RES = MUNIC_RES |> as.character(),
+    ESPEC = ESPEC |> as.character(),
+    SEXO = SEXO |> as.character(),
+    RACA_COR = RACA_COR |> as.character(),
+    DIAG_PRINC = DIAG_PRINC |> as.character(),
+    MUNIC_MOV = MUNIC_MOV |> as.character()
+  ) |> 
+  filter(
+    MUNIC_RES == "352040" | MUNIC_MOV == "352040"
+  )
+
+ilhabela
+```
+
+```{r}
+diarreias <- paste("A0", seq(0,9,1), sep = "", collapse = "|")
+hepatite_a <- "B15"
+dengue <- "A90|A91"
+febre_amarela <- "A95"
+leishmaniose <- "B55"
+filariose <- "B74"
+malaria <- paste("B5", seq(0,4,1), sep = "", collapse = "|")
+chagas <- "B57"
+esquisto <- "B65"
+lepto <- "A27"
+tracoma <- "A71"
+conjuntivite <- "H10"
+micose <- "B35|B36"
+helminto <- paste("B", seq(68,83,1), sep = "", collapse = "|")
+teniase <- "B67"
+
+lista_cid <- paste(diarreias,
+      hepatite_a,
+      dengue,
+      febre_amarela,
+      leishmaniose,
+      filariose,
+      malaria,
+      chagas,
+      esquisto,
+      lepto,
+      tracoma,
+      conjuntivite,
+      micose,
+      helminto,
+      teniase,
+      sep = "|"
+)
+
+lista_cid
+```
+
+```{r}
+ilhabela_doencas <- ilhabela |> 
+  filter(
+    grepl(lista_cid,DIAG_PRINC)
+  )
+
+ilhabela_doencas
+```
+
+```{r}
+save(ilhabela_doencas, file = "ilhabela_doencas.rda")
+```
+

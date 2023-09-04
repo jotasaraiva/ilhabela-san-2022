@@ -1,0 +1,22 @@
+"0","dens <- density(ilhabela_tratado$IDADE)"
+"0",""
+"0","fig2 <- ilhabela_tratado |> "
+"0","  plot_ly("
+"0","    x = ~IDADE,"
+"0","    type = ""histogram"" ,"
+"0","    nbinsx = 25"
+"0","  ) |> "
+"0","  add_lines(x = dens$x, y = dens$y, yaxis = ""y2"", name = ""Densidade"") |>"
+"0","  layout(yaxis2 = list(overlaying = ""y"", "
+"0","                       side = ""right"", "
+"0","                       rangemode = ""tozero""))"
+"0",""
+"0","fig2"
+"2","Warning: 'scatter' objects don't have these attributes: 'nbinsx'
+Valid attributes include:
+'cliponaxis', 'connectgaps', 'customdata', 'customdatasrc', 'dx', 'dy', 'error_x', 'error_y', 'fill', 'fillcolor', 'fillpattern', 'groupnorm', 'hoverinfo', 'hoverinfosrc', 'hoverlabel', 'hoveron', 'hovertemplate', 'hovertemplatesrc', 'hovertext', 'hovertextsrc', 'ids', 'idssrc', 'legendgroup', 'legendgrouptitle', 'legendrank', 'line', 'marker', 'meta', 'metasrc', 'mode', 'name', 'opacity', 'orientation', 'selected', 'selectedpoints', 'showlegend', 'stackgaps', 'stackgroup', 'stream', 'text', 'textfont', 'textposition', 'textpositionsrc', 'textsrc', 'texttemplate', 'texttemplatesrc', 'transforms', 'type', 'uid', 'uirevision', 'unselected', 'visible', 'x', 'x0', 'xaxis', 'xcalendar', 'xhoverformat', 'xperiod', 'xperiod0', 'xperiodalignment', 'xsrc', 'y', 'y0', 'yaxis', 'ycalendar', 'yhoverformat', 'yperiod', 'yperiod0', 'yperiodalignment', 'ysrc', 'key', 'set', 'frame', 'transforms', '_isNestedKey', '_isSimpleKey', '_isGraticule', '_bbox'
+"
+"2","Warning: 'scatter' objects don't have these attributes: 'nbinsx'
+Valid attributes include:
+'cliponaxis', 'connectgaps', 'customdata', 'customdatasrc', 'dx', 'dy', 'error_x', 'error_y', 'fill', 'fillcolor', 'fillpattern', 'groupnorm', 'hoverinfo', 'hoverinfosrc', 'hoverlabel', 'hoveron', 'hovertemplate', 'hovertemplatesrc', 'hovertext', 'hovertextsrc', 'ids', 'idssrc', 'legendgroup', 'legendgrouptitle', 'legendrank', 'line', 'marker', 'meta', 'metasrc', 'mode', 'name', 'opacity', 'orientation', 'selected', 'selectedpoints', 'showlegend', 'stackgaps', 'stackgroup', 'stream', 'text', 'textfont', 'textposition', 'textpositionsrc', 'textsrc', 'texttemplate', 'texttemplatesrc', 'transforms', 'type', 'uid', 'uirevision', 'unselected', 'visible', 'x', 'x0', 'xaxis', 'xcalendar', 'xhoverformat', 'xperiod', 'xperiod0', 'xperiodalignment', 'xsrc', 'y', 'y0', 'yaxis', 'ycalendar', 'yhoverformat', 'yperiod', 'yperiod0', 'yperiodalignment', 'ysrc', 'key', 'set', 'frame', 'transforms', '_isNestedKey', '_isSimpleKey', '_isGraticule', '_bbox'
+"

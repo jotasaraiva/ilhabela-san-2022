@@ -1,0 +1,5 @@
+"0","percent_homens <- sum(ilhabela_tratado == ""Masculino"")/nrow(ilhabela_tratado) * 100"
+"0",""
+"0","gauge(percent_homens, min = 0, max = 100, gaugeSectors("
+"0","  success = c(0, 24), warning = c(50, 74), danger = c(75, 100)"
+"0","))"

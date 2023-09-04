@@ -1,0 +1,143 @@
+---
+title: "Relatório de Saneamento Ilhabela 2022"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+```
+
+```{r global, include=FALSE}
+load("ilhabela_doencas.rda")
+ilhabela_tratado <- ilhabela_doencas |> 
+  mutate(
+    ESPEC = case_when(
+      ESPEC == "03" ~ "Clinica",
+      ESPEC == "07" ~ "Pediatria",
+      ESPEC == "09" ~ "Cirurgia"
+    ),
+    SEXO = case_when(
+      SEXO == "3" ~ "Feminino",
+      SEXO == "1" ~ "Masculino"
+    ),
+    RACA_COR = case_when(
+      RACA_COR == "01" ~ "Branca",
+      RACA_COR == "99" ~ "Não declarado",
+      RACA_COR == "02" ~ "Preta",
+      RACA_COR == "03" ~ "Parda",
+      RACA_COR == "04" ~ "Amarela"
+    )
+  ) |> 
+  select(ESPEC, SEXO, RACA_COR, DIAG_PRINC, IDADE)
+```
+
+## Coluna 1 {.sidebar }
+
+### Sobre:
+
+Este relatório interativo representa os dados de internação, do sistema SIH-RD do Datasus, para o município de Ilhabela - SP em 2022.
+
+Os dados foram coletads por meio da API Microdatasus, desenvolvida por Raphael Saldanha.
+
+## Coluna 2 {.tabset}
+
+### Internações
+```{r}
+fig1 <- ilhabela_tratado |>
+  plot_ly(
+    x = ilhabela_tratado$ESPEC,
+    type = "histogram",
+    name = "Especialidade"
+  ) |> 
+  layout(
+    updatemenus = list(
+      list(
+        y=0.7,
+        buttons = list(
+          list(method = "restyle",
+               args = list("x",list(ilhabela_tratado$ESPEC)),
+               label = "Especialidade"),
+          list(method = "restyle",
+               args = list("x",list(ilhabela_tratado$RACA_COR)),
+               label = "Cor"),
+          list(method = "restyle",
+               args = list("x",list(ilhabela_tratado$DIAG_PRINC)),
+               label = "Diagnóstico")
+        )
+      )
+    )
+  )
+
+fig1
+```
+
+### Faixa Etária
+
+```{r}
+dens <- density(ilhabela_tratado$IDADE)
+
+fig2 <- ilhabela_tratado |> 
+  plot_ly(
+    x = ~IDADE,
+    type = "histogram",
+    name = "Histograma",
+    nbinsx = 25
+  ) |> 
+  add_lines(x = dens$x, y = dens$y, yaxis = "y2", name = "Densidade") |>
+  layout(yaxis2 = list(overlaying = "y", 
+                       side = "right", 
+                       rangemode = "tozero"))
+
+fig2
+```
+
+
+## Coluna 2
+
+### Mulheres
+```{r}
+percent_mulheres <- sum(ilhabela_tratado == "Feminino")/nrow(ilhabela_tratado) * 100
+
+gauge(percent_mulheres, min = 0, max = 100, gaugeSectors(
+  success = c(0, 24), warning = c(50, 74), danger = c(75, 100)
+))
+```
+
+
+### Homens
+```{r}
+percent_homens <- sum(ilhabela_tratado == "Masculino")/nrow(ilhabela_tratado) * 100
+
+gauge(percent_homens, min = 0, max = 100, gaugeSectors(
+  success = c(0, 24), warning = c(50, 74), danger = c(75, 100)
+))
+```
+
+
+### Menores
+```{r}
+percent_menores <- length(
+  ilhabela_tratado$IDADE[ilhabela_tratado$IDADE < 18]
+) / nrow(ilhabela_tratado) * 100
+
+gauge(percent_menores, min = 0, max = 100, gaugeSectors(
+  success = c(0, 24), warning = c(50, 74), danger = c(75, 100)
+))
+```
+
+### Idosos
+```{r}
+percent_idosos <- length(
+  ilhabela_tratado$IDADE[ilhabela_tratado$IDADE < 60]
+) / nrow(ilhabela_tratado) * 100
+
+gauge(percent_idosos, min = 0, max = 100, gaugeSectors(
+  success = c(0, 24), warning = c(50, 74), danger = c(75, 100)
+))
+```
+

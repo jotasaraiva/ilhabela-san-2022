@@ -1,0 +1,7 @@
+"0","percent_idosos <- length("
+"0","  ilhabela_tratado$IDADE[ilhabela_tratado$IDADE < 60]"
+"0",") / nrow(ilhabela_tratado) * 100"
+"0",""
+"0","gauge(percent_idosos, min = 0, max = 100, gaugeSectors("
+"0","  success = c(0, 24), warning = c(50, 74), danger = c(75, 100)"
+"0","))"
